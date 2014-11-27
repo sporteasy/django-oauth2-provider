@@ -36,6 +36,10 @@ class Client(models.Model):
 
     Clients are outlined in the :rfc:`2` and its subsections.
     """
+    class Meta:
+        app_label = 'oauth2'
+        db_table = 'oauth2_client'
+
     user = models.ForeignKey(AUTH_USER_MODEL, related_name='oauth2_client',
         blank=True, null=True)
     name = models.CharField(max_length=255, blank=True)
@@ -98,6 +102,10 @@ class Grant(models.Model):
     * :attr:`redirect_uri`
     * :attr:`scope`
     """
+    class Meta:
+        app_label = 'oauth2'
+        db_table = 'oauth2_grant'
+
     user = models.ForeignKey(AUTH_USER_MODEL)
     client = models.ForeignKey(Client)
     code = models.CharField(max_length=255, default=long_token)
@@ -129,6 +137,10 @@ class AccessToken(models.Model):
     * :meth:`get_expire_delta` - returns an integer representing seconds to
         expiry
     """
+    class Meta:
+        app_label = 'oauth2'
+        db_table = 'oauth2_accesstoken'
+
     user = models.ForeignKey(AUTH_USER_MODEL)
     token = models.CharField(max_length=255, default=long_token, db_index=True)
     client = models.ForeignKey(Client)
@@ -179,6 +191,10 @@ class RefreshToken(models.Model):
     * :attr:`client` - :class:`Client`
     * :attr:`expired` - ``boolean``
     """
+    class Meta:
+        app_label = 'oauth2'
+        db_table = 'oauth2_refreshtoken'
+
     user = models.ForeignKey(AUTH_USER_MODEL)
     token = models.CharField(max_length=255, default=long_token)
     access_token = models.OneToOneField(AccessToken,
