@@ -53,7 +53,11 @@ class RequestParamsClientBackend(object):
         if request is None:
             return None
 
-        form = ClientAuthForm(request.REQUEST)
+        data = {
+            'client_id': request.POST.get('client_id', request.GET.get('client_id')),
+            'client_secret': request.POST.get('client_secret', request.GET.get('client_secret'))
+        }
+        form = ClientAuthForm(data)
 
         if form.is_valid():
             return form.cleaned_data.get('client')
@@ -74,7 +78,13 @@ class PublicPasswordBackend(object):
         if request is None:
             return None
 
-        form = PublicPasswordGrantForm(request.REQUEST)
+        data = {
+            'client_id': request.POST.get('client_id', request.GET.get('client_id')),
+            'username': request.POST.get('username', request.GET.get('username')),
+            'password': request.POST.get('password', request.GET.get('password')),
+            'scope': request.POST.get('scope', request.GET.get('scope')),
+        }
+        form = PublicPasswordGrantForm(data)
 
         if form.is_valid():
             return form.cleaned_data.get('client')
