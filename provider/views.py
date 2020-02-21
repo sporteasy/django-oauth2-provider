@@ -1,6 +1,9 @@
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import json
-import urlparse
+import urllib.parse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect, QueryDict
 from django.utils.translation import ugettext as _
@@ -321,7 +324,7 @@ class Redirect(OAuthView, Mixin):
 
         redirect_uri = data.get('redirect_uri', None) or client.redirect_uri
 
-        parsed = urlparse.urlparse(redirect_uri)
+        parsed = urllib.parse.urlparse(redirect_uri)
 
         query = QueryDict('', mutable=True)
 
@@ -337,7 +340,7 @@ class Redirect(OAuthView, Mixin):
 
         parsed = parsed[:4] + (query.urlencode(), '')
 
-        redirect_uri = urlparse.ParseResult(*parsed).geturl()
+        redirect_uri = urllib.parse.ParseResult(*parsed).geturl()
 
         self.clear_data(request)
 
