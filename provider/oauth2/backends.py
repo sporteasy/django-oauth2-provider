@@ -1,3 +1,7 @@
+from base64 import b64decode
+
+from django.utils.encoding import force_bytes
+
 from ..utils import now
 from .forms import ClientAuthForm, PublicPasswordGrantForm
 from .models import AccessToken
@@ -29,7 +33,7 @@ class BasicClientBackend(object):
 
         try:
             basic, base64 = auth.split(' ')
-            client_id, client_secret = base64.decode('base64').split(':')
+            client_id, client_secret = b64decode(force_bytes(base64)).decode("ascii").split(':')
 
             form = ClientAuthForm({
                 'client_id': client_id,
