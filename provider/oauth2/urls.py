@@ -40,6 +40,9 @@ from django.conf.urls import url, include
 from .views import Authorize, Redirect, Capture, AccessTokenView
 
 
+app_name = "oauth2"
+
+
 urlpatterns = [
     url('^authorize/?$',
         login_required(Capture.as_view()),
