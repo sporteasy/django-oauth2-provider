@@ -3,9 +3,9 @@ import shortuuid
 from datetime import datetime, tzinfo
 from django.conf import settings
 from django.utils import dateparse
+from django.core.exceptions import FieldDoesNotExist
 from django.db.models.fields import (DateTimeField, DateField,
-                                     EmailField, TimeField,
-                                     FieldDoesNotExist)
+                                     EmailField, TimeField)
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.encoding import force_bytes
 
