@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.utils.encoding import smart_unicode
-from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_str
+from django.utils.translation import gettext as _
 from .. import scope
 from ..constants import RESPONSE_TYPE_CHOICES, SCOPES
 from ..forms import OAuthForm, OAuthValidationError
@@ -65,7 +65,7 @@ class ScopeChoiceField(forms.ChoiceField):
             value = value.split(' ')
 
         # Split values into list
-        return u' '.join([smart_unicode(val) for val in value]).split(u' ')
+        return u' '.join([smart_str(val) for val in value]).split(u' ')
 
     def validate(self, value):
         """
@@ -226,7 +226,7 @@ class RefreshTokenGrantForm(ScopeMixin, OAuthForm):
 
         # Only check if we've actually got a scope in the data
         # (read: All fields have been cleaned)
-        if want_scope is not 0 and not scope.check(want_scope, has_scope):
+        if want_scope != 0 and not scope.check(want_scope, has_scope):
             raise OAuthValidationError({'error': 'invalid_scope'})
 
         return data
@@ -265,7 +265,7 @@ class AuthorizationCodeGrantForm(ScopeMixin, OAuthForm):
 
         # Only check if we've actually got a scope in the data
         # (read: All fields have been cleaned)
-        if want_scope is not 0 and not scope.check(want_scope, has_scope):
+        if want_scope != 0 and not scope.check(want_scope, has_scope):
             raise OAuthValidationError({'error': 'invalid_scope'})
 
         return data

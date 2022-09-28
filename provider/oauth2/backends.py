@@ -1,3 +1,7 @@
+from base64 import b64decode
+
+from django.utils.encoding import force_bytes
+
 from ..utils import now
 from .forms import ClientAuthForm, PublicPasswordGrantForm
 from .models import AccessToken
@@ -29,7 +33,7 @@ class BasicClientBackend(object):
 
         try:
             basic, base64 = auth.split(' ')
-            client_id, client_secret = base64.decode('base64').split(':')
+            client_id, client_secret = b64decode(force_bytes(base64)).decode("ascii").split(':')
 
             form = ClientAuthForm({
                 'client_id': client_id,
@@ -53,7 +57,11 @@ class RequestParamsClientBackend(object):
         if request is None:
             return None
 
-        form = ClientAuthForm(request.REQUEST)
+        data = {
+            'client_id': request.POST.get('client_id', request.GET.get('client_id')),
+            'client_secret': request.POST.get('client_secret', request.GET.get('client_secret'))
+        }
+        form = ClientAuthForm(data)
 
         if form.is_valid():
             return form.cleaned_data.get('client')
@@ -74,7 +82,13 @@ class PublicPasswordBackend(object):
         if request is None:
             return None
 
-        form = PublicPasswordGrantForm(request.REQUEST)
+        data = {
+            'client_id': request.POST.get('client_id', request.GET.get('client_id')),
+            'username': request.POST.get('username', request.GET.get('username')),
+            'password': request.POST.get('password', request.GET.get('password')),
+            'scope': request.POST.get('scope', request.GET.get('scope')),
+        }
+        form = PublicPasswordGrantForm(data)
 
         if form.is_valid():
             return form.cleaned_data.get('client')

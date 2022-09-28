@@ -35,21 +35,25 @@ that are meant for client (as defined in :rfc:`1`) interaction.
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from ..compat.urls import *
+from django.conf.urls import re_path, include
+
 from .views import Authorize, Redirect, Capture, AccessTokenView
 
 
-urlpatterns = patterns('',
-    url('^authorize/?$',
+app_name = "oauth2"
+
+
+urlpatterns = [
+    re_path('^authorize/?$',
         login_required(Capture.as_view()),
         name='capture'),
-    url('^authorize/confirm/?$',
+    re_path('^authorize/confirm/?$',
         login_required(Authorize.as_view()),
         name='authorize'),
-    url('^redirect/?$',
+    re_path('^redirect/?$',
         login_required(Redirect.as_view()),
         name='redirect'),
-    url('^access_token/?$',
+    re_path('^access_token/?$',
         csrf_exempt(AccessTokenView.as_view()),
         name='access_token'),
-)
+]
