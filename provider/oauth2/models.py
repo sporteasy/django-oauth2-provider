@@ -194,6 +194,11 @@ class RefreshToken(models.Model):
     class Meta:
         app_label = 'oauth2'
         db_table = 'oauth2_refreshtoken'
+        indexes = [
+            models.Index(
+                name='token_client_expired_idx', fields=['token', 'client', 'expired']
+            )
+        ]
 
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     token = models.CharField(max_length=255, default=long_token)
